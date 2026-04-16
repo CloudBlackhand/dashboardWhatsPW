@@ -1,0 +1,57 @@
+name: Publish dashboard build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dashboard-new/**'
+      - '.github/workflows/publish-dashboard.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-dashboard
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install and build
+        working-directory: dashboard-new
+        run: |
+          npm install
+          npm run build
+
+      - name: Remove legacy Nuxt bundle from root
+        run: |
+          for p in _nuxt Workers Sessions Login event-monitor themes layout icons demo; do
+            git rm -rf "$p" 2>/dev/null || rm -rf "$p" 2>/dev/null || true
+          done
+          for f in index.html 200.html 404.html favicon.ico; do
+            git rm -f "$f" 2>/dev/null || rm -f "$f" 2>/dev/null || true
+          done
+
+      - name: Copy Vite dist to repository root
+        run: cp -a dashboard-new/dist/. ./
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "Nothing to commit."
+            exit 0
+          fi
+          git commit -m "chore: publish Vite build to repo root"
+          git push
