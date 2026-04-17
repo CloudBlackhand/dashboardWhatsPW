@@ -1,28 +1,19 @@
-# WhatsPW — Dashboard
+# WhatsPW — Dashboard (deploy estático)
 
-Recomenda-se clonar com um nome claro, **sem** chamar a pasta só `dashboard` (confunde com o bundle antigo):
+## Dois repositórios
 
-`git clone https://github.com/CloudBlackhand/dashboardWhatsPW.git dashboardWhatsPW`
+| Repo | Função |
+|------|--------|
+| **[dashboardWhatsPW-vite](https://github.com/CloudBlackhand/dashboardWhatsPW-vite)** | Código fonte: Vite + React + TanStack Table. **É aqui que desenvolves.** |
+| **Este repo** (`dashboardWhatsPW`) | Artefacto servido pelo WAHA: `index.html`, `assets/`, … na **raiz** (gerado pela Action). |
 
-## Estrutura
+## Publicar alterações do UI
 
-- **`dashboard-new/`** — código fonte (Vite + React + TanStack Table). É aqui que se edita o painel.
-- **Raiz do repo** (`index.html`, `assets/`, …) — saída **gerada automaticamente**; não editar à mão na `main`.
+1. Push em **[dashboardWhatsPW-vite](https://github.com/CloudBlackhand/dashboardWhatsPW-vite)** (`main`).
+2. Neste repo, em **Actions** → **Publish dashboard build** → **Run workflow** (execução manual).
+3. Atualiza `waha.config.json` → `dashboard.ref` no [WhatsPW](https://github.com/CloudBlackhand/WhatsPW) para o **último commit** da `main` deste repo (o commit da Action, se houver mudança).
+4. Rebuild / redeploy da imagem WAHA.
 
-## Fluxo
+## Referência Nuxt (WAHA original)
 
-1. Alteras ficheiros em `dashboard-new/`.
-2. Fazes `git push` para `main`.
-3. A GitHub Action **Publish dashboard build** corre `npm install` + `npm run build`, remove o bundle antigo (Nuxt) da raiz e copia o conteúdo de `dashboard-new/dist/` para a raiz, fazendo **commit + push**.
-
-O WAHA lê este repositório pelo ZIP do commit em `waha.config.json` → `dashboard.ref`. Depois de cada publicação automática, atualiza o `ref` para o **último commit** da `main` (o da Action ou o teu, o que for mais recente).
-
-## Desenvolvimento local
-
-```bash
-cd dashboard-new
-npm install
-npm run dev
-```
-
-Abre `http://localhost:5173/dashboard/` (com WAHA a correr; vê `dashboard-new/README.md`).
+O bundle antigo do upstream está em [devlikeapro/dashboard](https://github.com/devlikeapro/dashboard) — usa-o só como referência de API/UX no teu clone local (`dashboard/`).

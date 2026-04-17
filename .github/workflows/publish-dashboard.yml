@@ -1,10 +1,13 @@
 name: Publish dashboard build
 
+# O código fonte está em CloudBlackhand/dashboardWhatsPW-vite (repo à parte).
+# Corre esta workflow depois de push no repo vite, ou quando alterares este ficheiro.
+
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
-      - 'dashboard-new/**'
       - '.github/workflows/publish-dashboard.yml'
 
 permissions:
@@ -22,19 +25,25 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: actions/checkout@v4
+        with:
+          repository: CloudBlackhand/dashboardWhatsPW-vite
+          ref: main
+          path: ui
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: Install and build
-        working-directory: dashboard-new
+      - name: Install and build UI
+        working-directory: ui
         run: |
           npm install
           npm run build
 
-      - name: Remove legacy Nuxt bundle from root
+      - name: Remove legacy bundle and previous build artifacts
         run: |
-          for p in _nuxt Workers Sessions Login event-monitor themes layout icons demo; do
+          for p in _nuxt Workers Sessions Login event-monitor themes layout icons demo dashboard-new assets; do
             git rm -rf "$p" 2>/dev/null || rm -rf "$p" 2>/dev/null || true
           done
           for f in index.html 200.html 404.html favicon.ico; do
@@ -42,7 +51,7 @@ jobs:
           done
 
       - name: Copy Vite dist to repository root
-        run: cp -a dashboard-new/dist/. ./
+        run: cp -a ui/dist/. ./
 
       - name: Commit and push
         run: |
