@@ -1,7 +1,7 @@
 name: Publish dashboard build
 
-# O código fonte está em CloudBlackhand/dashboardWhatsPW-vite (repo à parte).
-# Corre esta workflow depois de push no repo vite, ou quando alterares este ficheiro.
+# Fonte: CloudBlackhand/dashboardWhatsPW-vite (checkout em ./ui).
+# Dispara: manualmente (Actions → Run workflow), ou ao alterar este YAML na main.
 
 on:
   workflow_dispatch:
