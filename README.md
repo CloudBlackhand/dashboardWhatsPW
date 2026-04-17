@@ -1,5 +1,9 @@
 # WhatsPW — Dashboard
 
+Recomenda-se clonar com um nome claro, **sem** chamar a pasta só `dashboard` (confunde com o bundle antigo):
+
+`git clone https://github.com/CloudBlackhand/dashboardWhatsPW.git dashboardWhatsPW`
+
 ## Estrutura
 
 - **`dashboard-new/`** — código fonte (Vite + React + TanStack Table). É aqui que se edita o painel.

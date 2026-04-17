@@ -28,4 +28,4 @@ O conteúdo a publicar no repositório GitHub usado pelo Docker é o interior de
 2. Atualiza `waha.config.json` → `waha.dashboard.ref` para o SHA desse commit.
 3. Rebuild da imagem WAHA / redeploy.
 
-O projeto antigo em `../dashboard/` continua útil como referência de rotas e comportamento da API.
+Commits antigos deste mesmo repo ainda têm o bundle Nuxt na raiz — útil como referência de rotas e API.
